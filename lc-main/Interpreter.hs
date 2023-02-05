@@ -10,6 +10,8 @@ subst x n b@(Var v) = if v == x then
 subst x n (Lam v t b) = Lam v t (subst x n b)
 subst x n (App e1 e2) = App (subst x n e1) (subst x n e2)
 subst x n (Add e1 e2) = Add (subst x n e1) (subst x n e2)
+subst x n (Subs e1 e2) = Subs (subst x n e1) (subst x n e2)
+subst x n (Mul e1 e2) = Mul (subst x n e1) (subst x n e2)
 subst x n (And e1 e2) = And (subst x n e1) (subst x n e2)
 subst x n (If e e1 e2) = If (subst x n e) (subst x n e1) (subst x n e2)
 subst x n (Paren e) = Paren (subst x n e)
@@ -30,7 +32,24 @@ step (Add (Num n1) e2) = case step e2 of
                            _        -> Nothing
 step (Add e1 e2) = case step e1 of 
                      Just e1' -> Just (Add e1' e2)
+                     _        -> Nothing
+-- Substração
+step (Subs (Num n1) (Num n2)) = Just (Num (n1 - n2))
+step (Subs (Num n1) e2) = case step e2 of 
+                           Just e2' -> Just (Subs (Num n1) e2')
+                           _        -> Nothing
+step (Subs e1 e2) = case step e1 of 
+                     Just e1' -> Just (Subs e1' e2)
                      _        -> Nothing 
+ -- Multipicação
+step (Mul (Num n1) (Num n2)) = Just (Num (n1 * n2))
+step (Mul (Num n1) e2) = case step e2 of 
+                           Just e2' -> Just (Mul (Num n1) e2')
+                           _        -> Nothing
+step (Mul e1 e2) = case step e1 of 
+                     Just e1' -> Just (Mul e1' e2)
+                     _        -> Nothing 
+
 step (And BTrue e2) = Just e2 
 step (And BFalse _) = Just BFalse 
 step (And e1 e2) = case step e1 of 

@@ -11,6 +11,8 @@ data Expr = BTrue
           | BFalse
           | Num Int 
           | Add Expr Expr 
+          | Subs Expr Expr
+          | Mul Expr Expr  
           | And Expr Expr 
           | If Expr Expr Expr 
           | Var String
@@ -24,6 +26,8 @@ data Token = TokenTrue
            | TokenFalse 
            | TokenNum Int 
            | TokenAdd 
+           | TokenSubs
+           | TokenMul
            | TokenAnd
            | TokenIf 
            | TokenThen
@@ -45,6 +49,8 @@ isToken c = elem c "->&|="
 lexer :: String -> [Token]
 lexer [] = [] 
 lexer ('+':cs) = TokenAdd : lexer cs 
+lexer ('-':cs) = TokenSubs : lexer cs
+lexer ('*':cs) = TokenMul : lexer cs 
 lexer ('\\':cs) = TokenLam : lexer cs
 lexer (':':cs) = TokenColon : lexer cs
 lexer ('(':cs) = TokenLParen : lexer cs

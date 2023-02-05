@@ -11,6 +11,16 @@ typeof _ (Num _) = Just TNum
 typeof ctx (Add e1 e2) = case (typeof ctx e1, typeof ctx e2) of 
                            (Just TNum, Just TNum) -> Just TNum
                            _                       -> Nothing 
+-- Tipo de retorno
+typeof ctx (Subs e1 e2) = case (typeof ctx e1, typeof ctx e2) of 
+                           (Just TNum, Just TNum) -> Just TNum
+                           _                       -> Nothing 
+
+typeof ctx (Mul e1 e2) = case (typeof ctx e1, typeof ctx e2) of 
+                           (Just TNum, Just TNum) -> Just TNum
+                           _                       -> Nothing 
+
+                
 typeof ctx (And e1 e2) = case (typeof ctx e1, typeof ctx  e2) of 
                            (Just TBool, Just TBool) -> Just TBool 
                            _                         -> Nothing
